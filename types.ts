@@ -10,6 +10,7 @@ export interface Job {
   startDate: string;
   endDate: string;
   description: string;
+  highlights?: string[]; // Added for bullet points
   technologies: string[];
 }
 
@@ -36,12 +37,14 @@ export interface ResumeData {
   title: string;
   summary: string;
   email: string;
+  phone?: string; // Added phone number
   location: string;
   socials: SocialLink[];
   experience: Job[];
   education: Education[];
   projects: Project[];
   skills: SkillCategory[];
+  resumeDownloadLink?: string; // Added link for downloading PDF
 }
 
 export interface ChatMessage {

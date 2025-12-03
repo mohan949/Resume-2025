@@ -1,16 +1,17 @@
 import React from 'react';
 import { RESUME_DATA } from './constants';
 import ChatWidget from './components/ChatWidget';
-import { IconGithub, IconLinkedin, IconTwitter, IconMail, IconMapPin } from './components/Icons';
+import { IconGithub, IconLinkedin, IconTwitter, IconMail, IconMapPin, IconPhone, IconDownload, IconHackerRank } from './components/Icons';
 
 function App() {
-  const { name, title, summary, experience, education, projects, skills, socials, location, email } = RESUME_DATA;
+  const { name, title, summary, experience, education, projects, skills, socials, location, email, phone, resumeDownloadLink } = RESUME_DATA;
 
   const getSocialIcon = (platform: string) => {
     switch (platform.toLowerCase()) {
       case 'github': return <IconGithub className="w-5 h-5" />;
       case 'linkedin': return <IconLinkedin className="w-5 h-5" />;
       case 'twitter': return <IconTwitter className="w-5 h-5" />;
+      case 'hackerrank': return <IconHackerRank className="w-5 h-5" />;
       default: return null;
     }
   };
@@ -41,12 +42,18 @@ function App() {
                    <IconMail className="w-4 h-4" />
                    {email}
                 </a>
+                {phone && (
+                  <a href={`tel:${phone}`} className="flex items-center gap-1.5 hover:text-blue-600 transition-colors">
+                    <IconPhone className="w-4 h-4" />
+                    {phone}
+                  </a>
+                )}
               </div>
               <p className="text-lg leading-relaxed text-slate-600 dark:text-slate-300 max-w-xl">
                 {summary}
               </p>
               
-              <div className="flex gap-3 pt-4">
+              <div className="flex flex-wrap items-center gap-3 pt-4">
                 {socials.map((social) => (
                   <a 
                     key={social.platform}
@@ -59,13 +66,26 @@ function App() {
                     {getSocialIcon(social.platform)}
                   </a>
                 ))}
+                {resumeDownloadLink && (
+                  <a 
+                    href={resumeDownloadLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-medium text-sm transition-all ml-2"
+                  >
+                    <IconDownload className="w-4 h-4" />
+                    Download Resume
+                  </a>
+                )}
               </div>
             </div>
             
             {/* Abstract Avatar Placeholder */}
-            <div className="relative shrink-0">
+            <div className="relative shrink-0 hidden md:block">
                <div className="w-40 h-40 md:w-56 md:h-56 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-500 to-indigo-600 shadow-2xl flex items-center justify-center">
-                 <span className="text-6xl font-bold text-white opacity-20 select-none">AD</span>
+                 <span className="text-6xl font-bold text-white opacity-20 select-none">
+                    {name.split(' ').map(n => n[0]).join('')}
+                 </span>
                </div>
                <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded-xl -z-10"></div>
             </div>
@@ -82,13 +102,13 @@ function App() {
             <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {skills.map((skillGroup) => (
-              <div key={skillGroup.category} className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                <h4 className="font-semibold text-lg mb-4 text-blue-600 dark:text-blue-400">{skillGroup.category}</h4>
+              <div key={skillGroup.category} className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <h4 className="font-semibold text-base mb-3 text-blue-600 dark:text-blue-400">{skillGroup.category}</h4>
                 <div className="flex flex-wrap gap-2">
                   {skillGroup.items.map((skill) => (
-                    <span key={skill} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm rounded-md font-medium">
+                    <span key={skill} className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs rounded-md font-medium border border-slate-200 dark:border-slate-700">
                       {skill}
                     </span>
                   ))}
@@ -120,7 +140,16 @@ function App() {
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4 max-w-3xl">
                   {job.description}
                 </p>
-                <div className="flex flex-wrap gap-2">
+                {/* Render Highlights if they exist */}
+                {job.highlights && job.highlights.length > 0 && (
+                  <ul className="list-disc list-outside ml-4 mb-4 space-y-2 text-slate-600 dark:text-slate-300 max-w-3xl text-sm leading-relaxed">
+                    {job.highlights.map((item, i) => (
+                      <li key={i}>{item}</li>
+                    ))}
+                  </ul>
+                )}
+                
+                <div className="flex flex-wrap gap-2 mt-4">
                   {job.technologies.map(tech => (
                     <span key={tech} className="text-xs font-semibold text-slate-500 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded">
                       {tech}
@@ -141,7 +170,7 @@ function App() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {projects.map((project, idx) => (
-              <div key={idx} className="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 hover:shadow-xl hover:border-blue-500/30 transition-all duration-300">
+              <div key={idx} className="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 hover:shadow-xl hover:border-blue-500/30 transition-all duration-300 flex flex-col">
                 <div className="flex justify-between items-start mb-4">
                   <h4 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                     {project.title}
@@ -152,12 +181,12 @@ function App() {
                     </a>
                   )}
                 </div>
-                <p className="text-slate-600 dark:text-slate-400 mb-6 text-sm leading-relaxed h-auto min-h-[3rem]">
+                <p className="text-slate-600 dark:text-slate-400 mb-6 text-sm leading-relaxed flex-grow">
                   {project.description}
                 </p>
                 <div className="flex flex-wrap gap-2 mt-auto">
                   {project.techStack.map(t => (
-                    <span key={t} className="text-xs px-2 py-1 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded font-medium">
+                    <span key={t} className="text-xs px-2 py-1 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded font-medium border border-slate-200 dark:border-slate-700">
                       {t}
                     </span>
                   ))}
@@ -176,12 +205,12 @@ function App() {
           
           <div className="grid grid-cols-1 gap-4">
             {education.map((edu, idx) => (
-              <div key={idx} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50">
+              <div key={idx} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
                  <div>
-                    <h4 className="font-bold text-slate-900 dark:text-white">{edu.institution}</h4>
+                    <h4 className="font-bold text-slate-900 dark:text-white text-lg">{edu.institution}</h4>
                     <p className="text-slate-600 dark:text-slate-400">{edu.degree}</p>
                  </div>
-                 <span className="text-sm font-semibold text-slate-400 mt-2 sm:mt-0">{edu.year}</span>
+                 <span className="text-sm font-semibold text-slate-400 mt-2 sm:mt-0 bg-white dark:bg-slate-800 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700">{edu.year}</span>
               </div>
             ))}
           </div>
