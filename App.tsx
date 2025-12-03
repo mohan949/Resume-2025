@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { RESUME_DATA } from './constants';
 import ChatWidget from './components/ChatWidget';
 import { IconGithub, IconLinkedin, IconTwitter, IconMail, IconMapPin, IconPhone, IconDownload, IconHackerRank } from './components/Icons';
 
 function App() {
   const { name, title, summary, experience, education, projects, skills, socials, location, email, phone, resumeDownloadLink } = RESUME_DATA;
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const getSocialIcon = (platform: string) => {
     switch (platform.toLowerCase()) {
@@ -17,98 +26,119 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-blue-200 dark:selection:bg-blue-900 font-sans">
+    <div className="min-h-screen relative overflow-x-hidden text-gray-100 selection:bg-purple-500/30 selection:text-purple-200">
       
+      {/* Dynamic Background */}
+      <div className="fixed inset-0 -z-10 bg-[#030712]">
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none"></div>
+      </div>
+
+      {/* Navigation */}
+      <nav className={`fixed top-0 w-full z-40 transition-all duration-500 ${scrolled ? 'glass py-3 shadow-lg' : 'bg-transparent py-6'}`}>
+        <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
+          <div className="text-xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+            MP.
+          </div>
+          <div className="flex items-center gap-4">
+             {resumeDownloadLink && (
+                <a 
+                  href={resumeDownloadLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/10 rounded-full text-sm font-medium transition-all hover:scale-105 backdrop-blur-sm"
+                >
+                  <IconDownload className="w-4 h-4" />
+                  <span>Resume</span>
+                </a>
+              )}
+          </div>
+        </div>
+      </nav>
+
       {/* Hero Section */}
-      <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="flex flex-col md:flex-row gap-8 items-start md:items-center justify-between">
-            <div className="space-y-4 max-w-2xl">
-              <div className="inline-block px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-sm font-semibold tracking-wide uppercase mb-2">
+      <header className="pt-32 pb-16 md:pt-48 md:pb-32 px-6">
+        <div className="max-w-6xl mx-auto animate-fade-in">
+          <div className="flex flex-col md:flex-row gap-12 items-center">
+            <div className="flex-1 space-y-6 text-center md:text-left">
+              <div className="inline-block px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-300 text-xs font-semibold tracking-wider uppercase mb-2 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
                 Available for hire
               </div>
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-slate-900 dark:text-white">
-                {name}
+              <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight">
+                Hi, I'm <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400">{name}</span>
               </h1>
-              <h2 className="text-xl md:text-2xl text-slate-600 dark:text-slate-400 font-medium">
+              <h2 className="text-2xl md:text-3xl text-gray-400 font-light">
                 {title}
               </h2>
-              <div className="flex flex-wrap gap-4 text-sm text-slate-500 dark:text-slate-400 pt-2">
-                <div className="flex items-center gap-1.5 hover:text-blue-600 transition-colors cursor-default">
-                   <IconMapPin className="w-4 h-4" />
+              <p className="text-lg leading-relaxed text-gray-400 max-w-2xl mx-auto md:mx-0">
+                {summary}
+              </p>
+              
+              <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start pt-4 text-sm text-gray-400">
+                <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+                   <IconMapPin className="w-4 h-4 text-purple-400" />
                    {location}
                 </div>
-                <a href={`mailto:${email}`} className="flex items-center gap-1.5 hover:text-blue-600 transition-colors">
-                   <IconMail className="w-4 h-4" />
+                <a href={`mailto:${email}`} className="flex items-center gap-2 px-3 py-1 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10 transition-colors hover:text-white">
+                   <IconMail className="w-4 h-4 text-purple-400" />
                    {email}
                 </a>
                 {phone && (
-                  <a href={`tel:${phone}`} className="flex items-center gap-1.5 hover:text-blue-600 transition-colors">
-                    <IconPhone className="w-4 h-4" />
+                  <a href={`tel:${phone}`} className="flex items-center gap-2 px-3 py-1 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10 transition-colors hover:text-white">
+                    <IconPhone className="w-4 h-4 text-purple-400" />
                     {phone}
                   </a>
                 )}
               </div>
-              <p className="text-lg leading-relaxed text-slate-600 dark:text-slate-300 max-w-xl">
-                {summary}
-              </p>
-              
-              <div className="flex flex-wrap items-center gap-3 pt-4">
+
+              <div className="flex gap-4 justify-center md:justify-start pt-4">
                 {socials.map((social) => (
                   <a 
                     key={social.platform}
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2.5 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-600 dark:text-slate-400 hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600 transition-all duration-300"
+                    className="p-3 bg-white/5 border border-white/10 rounded-full text-gray-400 hover:text-white hover:bg-purple-600/20 hover:border-purple-500/50 hover:shadow-[0_0_15px_rgba(168,85,247,0.3)] transition-all duration-300 transform hover:-translate-y-1"
                     aria-label={social.platform}
                   >
                     {getSocialIcon(social.platform)}
                   </a>
                 ))}
-                {resumeDownloadLink && (
-                  <a 
-                    href={resumeDownloadLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-medium text-sm transition-all ml-2"
-                  >
-                    <IconDownload className="w-4 h-4" />
-                    Download Resume
-                  </a>
-                )}
               </div>
             </div>
             
-            {/* Abstract Avatar Placeholder */}
-            <div className="relative shrink-0 hidden md:block">
-               <div className="w-40 h-40 md:w-56 md:h-56 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-500 to-indigo-600 shadow-2xl flex items-center justify-center">
-                 <span className="text-6xl font-bold text-white opacity-20 select-none">
-                    {name.split(' ').map(n => n[0]).join('')}
+            {/* Visual Element */}
+            <div className="relative shrink-0 w-64 h-64 md:w-80 md:h-80 animate-slide-up animation-delay-500">
+               <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-3xl rotate-6 opacity-50 blur-lg"></div>
+               <div className="absolute inset-0 bg-gray-900 rounded-3xl border border-white/10 overflow-hidden flex items-center justify-center z-10">
+                 <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]"></div>
+                 <span className="text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-gray-600 select-none">
+                    MP
                  </span>
                </div>
-               <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded-xl -z-10"></div>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+      <main className="max-w-6xl mx-auto px-6 space-y-32 pb-32">
         
         {/* Skills Section */}
-        <section>
-          <div className="flex items-center gap-4 mb-8">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Technical Skills</h3>
-            <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
-          </div>
+        <section className="animate-slide-up">
+          <h3 className="text-3xl font-bold mb-10 flex items-center gap-3">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Technical Arsenal</span>
+            <div className="h-px bg-gradient-to-r from-purple-500/50 to-transparent flex-1"></div>
+          </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {skills.map((skillGroup) => (
-              <div key={skillGroup.category} className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                <h4 className="font-semibold text-base mb-3 text-blue-600 dark:text-blue-400">{skillGroup.category}</h4>
+              <div key={skillGroup.category} className="glass p-6 rounded-2xl transition-all duration-300 hover:bg-white/10 hover:shadow-lg hover:shadow-purple-500/10 group">
+                <h4 className="font-semibold text-lg mb-4 text-purple-300 group-hover:text-purple-200">{skillGroup.category}</h4>
                 <div className="flex flex-wrap gap-2">
                   {skillGroup.items.map((skill) => (
-                    <span key={skill} className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs rounded-md font-medium border border-slate-200 dark:border-slate-700">
+                    <span key={skill} className="px-3 py-1 bg-black/30 text-gray-300 text-xs rounded-full border border-white/5 group-hover:border-purple-500/30 transition-colors">
                       {skill}
                     </span>
                   ))}
@@ -120,38 +150,52 @@ function App() {
 
         {/* Experience Section */}
         <section>
-          <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Experience</h3>
-            <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
-          </div>
+          <h3 className="text-3xl font-bold mb-10 flex items-center gap-3">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Experience</span>
+            <div className="h-px bg-gradient-to-r from-purple-500/50 to-transparent flex-1"></div>
+          </h3>
 
-          <div className="space-y-12 border-l-2 border-slate-200 dark:border-slate-800 ml-3 md:ml-6 pl-8 md:pl-12 relative">
+          <div className="space-y-8 relative pl-8 md:pl-0">
+             {/* Mobile Timeline Line */}
+             <div className="absolute left-2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-transparent md:hidden"></div>
+
             {experience.map((job, index) => (
-              <div key={index} className="relative">
-                <span className="absolute -left-[41px] md:-left-[58px] top-1 w-5 h-5 rounded-full border-4 border-white dark:border-slate-950 bg-blue-600"></span>
+              <div key={index} className="glass rounded-2xl p-6 md:p-8 md:ml-12 relative group glass-hover transition-all duration-500">
+                {/* Desktop Timeline Dot/Line */}
+                <div className="hidden md:block absolute -left-12 top-0 bottom-0 w-px bg-white/10 group-hover:bg-gradient-to-b group-hover:from-blue-500 group-hover:to-purple-500 transition-colors"></div>
+                <div className="hidden md:block absolute -left-[54px] top-8 w-3 h-3 rounded-full bg-gray-900 border-2 border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)] z-10"></div>
                 
-                <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
-                  <h4 className="text-xl font-bold text-slate-900 dark:text-white">{job.role}</h4>
-                  <span className="text-sm font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 px-3 py-1 rounded-full mt-2 sm:mt-0 w-fit">
+                {/* Mobile Timeline Dot */}
+                <div className="md:hidden absolute -left-[29px] top-8 w-3 h-3 rounded-full bg-gray-900 border-2 border-blue-500 z-10"></div>
+
+                <div className="flex flex-col md:flex-row md:items-baseline md:justify-between mb-4">
+                  <div>
+                    <h4 className="text-2xl font-bold text-white group-hover:text-blue-300 transition-colors">{job.role}</h4>
+                    <div className="text-lg text-purple-400 mt-1">{job.company}</div>
+                  </div>
+                  <span className="text-sm font-mono text-gray-400 bg-white/5 px-3 py-1 rounded-full border border-white/5 mt-2 md:mt-0 w-fit">
                     {job.startDate} — {job.endDate}
                   </span>
                 </div>
-                <div className="text-lg font-medium text-blue-600 dark:text-blue-400 mb-4">{job.company}</div>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4 max-w-3xl">
+                
+                <p className="text-gray-300 leading-relaxed mb-6">
                   {job.description}
                 </p>
-                {/* Render Highlights if they exist */}
-                {job.highlights && job.highlights.length > 0 && (
-                  <ul className="list-disc list-outside ml-4 mb-4 space-y-2 text-slate-600 dark:text-slate-300 max-w-3xl text-sm leading-relaxed">
+                
+                {job.highlights && (
+                  <ul className="space-y-3 mb-6">
                     {job.highlights.map((item, i) => (
-                      <li key={i}>{item}</li>
+                      <li key={i} className="flex gap-3 text-sm text-gray-400">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
+                        <span className="leading-relaxed">{item}</span>
+                      </li>
                     ))}
                   </ul>
                 )}
                 
-                <div className="flex flex-wrap gap-2 mt-4">
+                <div className="flex flex-wrap gap-2 pt-4 border-t border-white/5">
                   {job.technologies.map(tech => (
-                    <span key={tech} className="text-xs font-semibold text-slate-500 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded">
+                    <span key={tech} className="text-xs font-medium text-gray-400 px-2 py-1 bg-white/5 rounded hover:bg-white/10 hover:text-white transition-colors cursor-default">
                       {tech}
                     </span>
                   ))}
@@ -163,30 +207,30 @@ function App() {
 
         {/* Projects Section */}
         <section>
-          <div className="flex items-center gap-4 mb-10">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Featured Projects</h3>
-            <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
-          </div>
+          <h3 className="text-3xl font-bold mb-10 flex items-center gap-3">
+             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Featured Projects</span>
+             <div className="h-px bg-gradient-to-r from-purple-500/50 to-transparent flex-1"></div>
+          </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {projects.map((project, idx) => (
-              <div key={idx} className="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 hover:shadow-xl hover:border-blue-500/30 transition-all duration-300 flex flex-col">
+              <div key={idx} className="glass rounded-2xl p-8 flex flex-col h-full glass-hover transition-all duration-300 group">
                 <div className="flex justify-between items-start mb-4">
-                  <h4 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  <h4 className="text-xl font-bold text-gray-100 group-hover:text-blue-400 transition-colors">
                     {project.title}
                   </h4>
                   {project.link && (
-                    <a href={project.link} className="text-slate-400 hover:text-blue-600">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    <a href={project.link} className="p-2 bg-white/5 rounded-full hover:bg-white/20 text-gray-400 hover:text-white transition-all">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                     </a>
                   )}
                 </div>
-                <p className="text-slate-600 dark:text-slate-400 mb-6 text-sm leading-relaxed flex-grow">
+                <p className="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
                   {project.description}
                 </p>
                 <div className="flex flex-wrap gap-2 mt-auto">
                   {project.techStack.map(t => (
-                    <span key={t} className="text-xs px-2 py-1 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded font-medium border border-slate-200 dark:border-slate-700">
+                    <span key={t} className="text-[10px] uppercase tracking-wider px-2 py-1 bg-blue-500/10 text-blue-300 rounded border border-blue-500/20">
                       {t}
                     </span>
                   ))}
@@ -198,19 +242,19 @@ function App() {
 
         {/* Education Section */}
          <section>
-          <div className="flex items-center gap-4 mb-8">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Education</h3>
-            <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
-          </div>
+          <h3 className="text-3xl font-bold mb-10 flex items-center gap-3">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Education</span>
+            <div className="h-px bg-gradient-to-r from-purple-500/50 to-transparent flex-1"></div>
+          </h3>
           
           <div className="grid grid-cols-1 gap-4">
             {education.map((edu, idx) => (
-              <div key={idx} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
+              <div key={idx} className="glass rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center border-l-4 border-l-purple-500 hover:bg-white/5 transition-colors">
                  <div>
-                    <h4 className="font-bold text-slate-900 dark:text-white text-lg">{edu.institution}</h4>
-                    <p className="text-slate-600 dark:text-slate-400">{edu.degree}</p>
+                    <h4 className="font-bold text-xl text-white">{edu.institution}</h4>
+                    <p className="text-purple-300 mt-1">{edu.degree}</p>
                  </div>
-                 <span className="text-sm font-semibold text-slate-400 mt-2 sm:mt-0 bg-white dark:bg-slate-800 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700">{edu.year}</span>
+                 <span className="text-sm font-semibold text-gray-500 mt-2 sm:mt-0 bg-black/40 px-4 py-1.5 rounded-full border border-white/5">{edu.year}</span>
               </div>
             ))}
           </div>
@@ -218,13 +262,14 @@ function App() {
 
       </main>
 
-      <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12 mt-12">
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          <p className="text-slate-500 dark:text-slate-400 mb-4">
+      <footer className="border-t border-white/5 py-12 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-t from-blue-900/10 to-transparent pointer-events-none"></div>
+        <div className="max-w-6xl mx-auto px-6 text-center relative z-10">
+          <p className="text-gray-500 mb-4">
             &copy; {new Date().getFullYear()} {name}. All rights reserved.
           </p>
-          <p className="text-xs text-slate-400 dark:text-slate-500">
-            Built with React, Tailwind CSS & Google Gemini
+          <p className="text-xs text-gray-600">
+            Crafted with <span className="text-red-500">❤</span> using React, Tailwind & Gemini
           </p>
         </div>
       </footer>

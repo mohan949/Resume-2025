@@ -64,43 +64,43 @@ const ChatWidget: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end font-sans">
       {/* Chat Window */}
       {isOpen && (
-        <div className="mb-4 w-[90vw] md:w-96 h-[500px] bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden transition-all duration-300 animate-in slide-in-from-bottom-5">
+        <div className="mb-4 w-[90vw] md:w-96 h-[500px] glass rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom-5 duration-300 border border-white/10">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 flex justify-between items-center text-white">
+          <div className="bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-md p-4 flex justify-between items-center text-white border-b border-white/10">
             <div className="flex items-center gap-2">
-              <IconSparkles className="w-5 h-5" />
+              <IconSparkles className="w-5 h-5 animate-pulse" />
               <div>
                 <h3 className="font-bold text-sm">Resume Assistant</h3>
-                <p className="text-xs text-blue-100 opacity-80">Powered by Gemini 2.5 Flash</p>
+                <p className="text-[10px] text-blue-100 opacity-80 uppercase tracking-wider">Powered by Gemini</p>
               </div>
             </div>
             <button 
               onClick={() => setIsOpen(false)}
-              className="text-white/80 hover:text-white transition-colors"
+              className="text-white/80 hover:text-white transition-colors bg-white/10 p-1 rounded-full hover:bg-white/20"
             >
-              <IconX className="w-5 h-5" />
+              <IconX className="w-4 h-4" />
             </button>
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-slate-900 scrollbar-hide">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-900/50 scrollbar-hide">
             {messages.map((msg, idx) => (
               <div 
                 key={idx} 
                 className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
               >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                  msg.role === 'model' ? 'bg-gradient-to-br from-indigo-500 to-purple-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border border-white/10 shadow-lg ${
+                  msg.role === 'model' ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white' : 'bg-gray-700 text-gray-300'
                 }`}>
-                  {msg.role === 'model' ? <IconBot className="w-5 h-5" /> : <IconUser className="w-5 h-5" />}
+                  {msg.role === 'model' ? <IconBot className="w-4 h-4" /> : <IconUser className="w-4 h-4" />}
                 </div>
-                <div className={`max-w-[75%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
+                <div className={`max-w-[75%] p-3 rounded-2xl text-sm leading-relaxed shadow-md backdrop-blur-sm ${
                   msg.role === 'user' 
-                    ? 'bg-blue-600 text-white rounded-tr-none' 
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-slate-700 rounded-tl-none'
+                    ? 'bg-blue-600/80 text-white rounded-tr-none border border-blue-500/50' 
+                    : 'bg-gray-800/80 text-gray-200 border border-white/10 rounded-tl-none'
                 }`}>
                   {msg.text}
                 </div>
@@ -108,14 +108,14 @@ const ChatWidget: React.FC = () => {
             ))}
             {isLoading && (
               <div className="flex gap-3">
-                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center shrink-0">
-                  <IconBot className="w-5 h-5" />
+                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center shrink-0 border border-white/10">
+                  <IconBot className="w-4 h-4" />
                 </div>
-                <div className="bg-white dark:bg-slate-800 p-3 rounded-2xl rounded-tl-none border border-slate-100 dark:border-slate-700">
+                <div className="bg-gray-800/80 p-3 rounded-2xl rounded-tl-none border border-white/10 backdrop-blur-sm">
                   <div className="flex gap-1.5">
-                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span>
+                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>
                   </div>
                 </div>
               </div>
@@ -124,23 +124,23 @@ const ChatWidget: React.FC = () => {
           </div>
 
           {/* Input Area */}
-          <div className="p-3 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700">
+          <div className="p-3 bg-gray-900/80 border-t border-white/10 backdrop-blur-md">
             <div className="relative flex items-center">
               <input
                 type="text"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder="Ask about my experience..."
-                className="w-full bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white rounded-full pl-4 pr-12 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                placeholder="Ask me anything..."
+                className="w-full bg-gray-800/50 text-white rounded-full pl-4 pr-12 py-3 text-sm border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-gray-800 transition-all placeholder-gray-500"
                 disabled={isLoading}
               />
               <button
                 onClick={handleSendMessage}
                 disabled={!inputText.trim() || isLoading}
-                className="absolute right-2 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="absolute right-2 p-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
               >
-                <IconSend className="w-4 h-4" />
+                <IconSend className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
@@ -150,8 +150,8 @@ const ChatWidget: React.FC = () => {
       {/* Floating Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 ${
-          isOpen ? 'bg-slate-700 rotate-90' : 'bg-gradient-to-r from-blue-600 to-indigo-600 animate-pulse-slow'
+        className={`w-14 h-14 rounded-full shadow-[0_0_20px_rgba(59,130,246,0.5)] flex items-center justify-center transition-all duration-300 transform hover:scale-110 border border-white/20 ${
+          isOpen ? 'bg-gray-800 rotate-90' : 'bg-gradient-to-r from-blue-600 to-purple-600 animate-pulse'
         } text-white`}
       >
         {isOpen ? <IconX className="w-6 h-6" /> : <IconMessageCircle className="w-7 h-7" />}
