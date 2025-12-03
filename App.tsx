@@ -1,11 +1,15 @@
+
 import React, { useEffect, useState } from 'react';
 import { RESUME_DATA } from './constants';
 import ChatWidget from './components/ChatWidget';
-import { IconGithub, IconLinkedin, IconTwitter, IconMail, IconMapPin, IconPhone, IconDownload, IconHackerRank } from './components/Icons';
+import ContactModal from './components/ContactModal';
+import { IconGithub, IconLinkedin, IconTwitter, IconMapPin, IconDownload, IconHackerRank, IconMail } from './components/Icons';
 
 function App() {
-  const { name, title, summary, experience, education, projects, skills, socials, location, email, phone, resumeDownloadLink } = RESUME_DATA;
+  const { name, title, summary, experience, education, projects, skills, socials, location, email, phone, resumeDownloadLink, avatarUrl } = RESUME_DATA;
   const [scrolled, setScrolled] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,21 +80,19 @@ function App() {
                 {summary}
               </p>
               
-              <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start pt-4 text-sm text-gray-400">
-                <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+              <div className="flex flex-col sm:flex-row items-center gap-6 justify-center md:justify-start pt-4">
+                <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10 transition-colors text-sm text-gray-400">
                    <IconMapPin className="w-4 h-4 text-purple-400" />
                    {location}
                 </div>
-                <a href={`mailto:${email}`} className="flex items-center gap-2 px-3 py-1 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10 transition-colors hover:text-white">
-                   <IconMail className="w-4 h-4 text-purple-400" />
-                   {email}
-                </a>
-                {phone && (
-                  <a href={`tel:${phone}`} className="flex items-center gap-2 px-3 py-1 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10 transition-colors hover:text-white">
-                    <IconPhone className="w-4 h-4 text-purple-400" />
-                    {phone}
-                  </a>
-                )}
+                
+                <button 
+                  onClick={() => setIsContactOpen(true)}
+                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-full font-medium shadow-lg hover:shadow-purple-500/30 transition-all transform hover:-translate-y-1 flex items-center gap-2"
+                >
+                  <IconMail className="w-4 h-4" />
+                  <span>Contact Me</span>
+                </button>
               </div>
 
               <div className="flex gap-4 justify-center md:justify-start pt-4">
@@ -113,10 +115,21 @@ function App() {
             <div className="relative shrink-0 w-64 h-64 md:w-80 md:h-80 animate-slide-up animation-delay-500">
                <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-3xl rotate-6 opacity-50 blur-lg"></div>
                <div className="absolute inset-0 bg-gray-900 rounded-3xl border border-white/10 overflow-hidden flex items-center justify-center z-10">
-                 <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]"></div>
-                 <span className="text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-gray-600 select-none">
-                    MP
-                 </span>
+                 {avatarUrl && !imageError ? (
+                    <img 
+                      src={avatarUrl} 
+                      alt={name} 
+                      onError={() => setImageError(true)}
+                      className="w-full h-full object-cover object-top transform hover:scale-105 transition-transform duration-700" 
+                    />
+                 ) : (
+                   <>
+                     <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]"></div>
+                     <span className="text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-gray-600 select-none">
+                        MP
+                     </span>
+                   </>
+                 )}
                </div>
             </div>
           </div>
@@ -276,6 +289,15 @@ function App() {
 
       {/* Floating AI Chat Widget */}
       <ChatWidget />
+      
+      {/* Contact Modal */}
+      <ContactModal 
+        isOpen={isContactOpen} 
+        onClose={() => setIsContactOpen(false)} 
+        email={email}
+        phone={phone}
+        location={location}
+      />
     </div>
   );
 }

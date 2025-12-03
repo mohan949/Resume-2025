@@ -1,4 +1,5 @@
 import { ResumeData } from './types';
+import { PROFILE_PIC } from './assets/images';
 
 export const RESUME_DATA: ResumeData = {
   name: "Mohan Prasad",
@@ -7,6 +8,7 @@ export const RESUME_DATA: ResumeData = {
   email: "Prasadmohan949@gmail.com",
   phone: "+91 7506760865",
   location: "Mumbai, India",
+  avatarUrl: PROFILE_PIC,
   resumeDownloadLink: "https://flowcv.com/resume/fk4b33hi1j",
   socials: [
     { platform: "LinkedIn", url: "https://www.linkedin.com/in/mohanprasadqa/", icon: "linkedin" },

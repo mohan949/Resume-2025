@@ -39,6 +39,7 @@ export interface ResumeData {
   email: string;
   phone?: string; // Added phone number
   location: string;
+  avatarUrl?: string; // Added avatar URL
   socials: SocialLink[];
   experience: Job[];
   education: Education[];
